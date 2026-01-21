@@ -382,7 +382,6 @@ export default function SrashTalkBusinessPortfolio() {
 const navLinks = [
   { name: "Home", path: "#home" },
   { name: "Content Strategy", path: "#videos" },
-  { name: "Social Media", path: "#social" },
   { name: "Client Portfolio", path: "#portfolio" },
   { name: "About", path: "/aboutpage" },
   { name: "Contact", path: "#contact" },
