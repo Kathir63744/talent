@@ -60,6 +60,8 @@ import {
   Share2,
   ExternalLink as LinkIcon,
 } from "lucide-react"
+// Add this import
+import Link from 'next/link';
 
 export default function SrashTalkBusinessPortfolio() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -377,13 +379,14 @@ export default function SrashTalkBusinessPortfolio() {
   ]
 
   // Navigation
-  const navLinks = [
-    { name: "Home", path: "#home" },
-    { name: "Video Library", path: "#videos" },
-    { name: "Social Media", path: "#social" },
-    { name: "Platforms", path: "#platforms" },
-    { name: "Contact", path: "#contact" },
-  ]
+const navLinks = [
+  { name: "Home", path: "#home" },
+  { name: "Content Strategy", path: "#videos" },
+  { name: "Social Media", path: "#social" },
+  { name: "Client Portfolio", path: "#portfolio" },
+  { name: "About", path: "/aboutpage" },
+  { name: "Contact", path: "#contact" },
+]
 
   // Video Playlists
   const videoPlaylists = [
@@ -447,36 +450,71 @@ export default function SrashTalkBusinessPortfolio() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-3 lg:py-4">
             {/* Logo */}
-            <button 
-              onClick={() => document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex items-center space-x-3 group"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg">
-                <Mic className="w-7 h-7 text-white" />
-              </div>
-              <div className="flex flex-col text-left">
-                <h1 className="text-lg lg:text-xl font-bold text-white leading-tight">Srash Talk</h1>
-                <p className="text-xs text-gray-400 leading-tight">Voice & Communication Influencer</p>
-              </div>
-            </button>
+<button 
+  onClick={() => document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' })}
+  className="flex items-center space-x-4 group"
+>
+  {/* Big Logo Container */}
+  <div className="h-16 w-auto flex items-center">
+    <img 
+      src="/logo.png" 
+      alt="Srash Talk Logo" 
+      className="h-16 w-auto object-contain"
+      onError={(e) => {
+        e.target.style.display = 'none';
+        // Fallback to big text logo
+        e.target.parentElement.innerHTML = `
+          <div class="h-16 flex items-center">
+            <div class="text-white font-bold text-3xl">ST</div>
+          </div>
+        `;
+      }}
+    />
+  </div>
+  
+  {/* Text */}
+  <div className="flex flex-col text-left">
+    <h1 className="text-xl lg:text-2xl font-bold text-white leading-tight">Srash Talk</h1>
+    <p className="text-sm text-gray-400 leading-tight">Voice & Communication</p>
+  </div>
+</button>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
-              {navLinks.map((link) => (
-                <button
-                  key={link.name}
-                  onClick={() => document.getElementById(link.path.slice(1))?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white transition-colors relative group"
-                >
-                  {link.name}
-                  <span className="absolute -bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </button>
-              ))}
-              <div className="w-px h-6 bg-gray-700 mx-2"></div>
-              <button className="ml-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-sm font-medium rounded-lg hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
-                Follow on Social
-              </button>
-            </div>
+{/* Desktop Navigation */}
+<div className="hidden lg:flex items-center space-x-1">
+  {navLinks.map((link) => {
+    // Check if it's a hash link or page link
+    const isHashLink = link.path.startsWith('#');
+    
+    return isHashLink ? (
+      <button
+        key={link.name}
+        onClick={() => {
+          const element = document.getElementById(link.path.slice(1));
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+        className="px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white transition-colors relative group"
+      >
+        {link.name}
+        <span className="absolute -bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+      </button>
+    ) : (
+      <Link
+        key={link.name}
+        href={link.path}
+        className="px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white transition-colors relative group"
+      >
+        {link.name}
+        <span className="absolute -bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+      </Link>
+    );
+  })}
+  <div className="w-px h-6 bg-gray-700 mx-2"></div>
+  <button className="ml-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-sm font-medium rounded-lg hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+    Follow on Social
+  </button>
+</div>
 
             {/* Mobile Menu Button */}
             <button
@@ -517,8 +555,6 @@ export default function SrashTalkBusinessPortfolio() {
           )}
         </div>
       </nav>
-
-      {/* Hero Section */}
       {/* Hero Section */}
 <section id="home" className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
   {/* Background Gradient */}
@@ -530,150 +566,168 @@ export default function SrashTalkBusinessPortfolio() {
   <div className="max-w-7xl mx-auto relative z-10">
     <div className="grid lg:grid-cols-2 gap-12 items-center">
       {/* Left Content */}
-      <div className="space-y-8">
-        {/* 4 Image Frames */}
-        <div className="grid grid-cols-2 gap-3 mb-8">
-          {/* Frame 1 */}
-          <div className="relative rounded-xl overflow-hidden group h-32">
-            <img 
-              src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=400&q=80"
-              alt="BPO Voice Training"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
-            <div className="absolute bottom-2 left-2">
-              <span className="text-xs font-medium text-white bg-black/40 px-2 py-1 rounded">BPO Voice Training</span>
-            </div>
-          </div>
-          
-          {/* Frame 2 */}
-          <div className="relative rounded-xl overflow-hidden group h-32">
-            <img 
-              src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=400&q=80"
-              alt="Interview Confidence"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
-            <div className="absolute bottom-2 left-2">
-              <span className="text-xs font-medium text-white bg-black/40 px-2 py-1 rounded">Interview Confidence</span>
-            </div>
-          </div>
-          
-          {/* Frame 3 */}
-          <div className="relative rounded-xl overflow-hidden group h-32">
-            <img 
-              src="https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=400&q=80"
-              alt="Real-Talk English"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
-            <div className="absolute bottom-2 left-2">
-              <span className="text-xs font-medium text-white bg-black/40 px-2 py-1 rounded">Real-Talk English</span>
-            </div>
-          </div>
-          
-          {/* Frame 4 */}
-          <div className="relative rounded-xl overflow-hidden group h-32">
-            <img 
-              src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=400&q=80"
-              alt="Voice Makeovers"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
-            <div className="absolute bottom-2 left-2">
-              <span className="text-xs font-medium text-white bg-black/50 px-2 py-1 rounded backdrop-blur-sm">Voice Makeovers</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Heading */}
-        <div className="space-y-6">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-            <span className="block text-white">Find Your</span>
-            <span className="block">
-              <span className="bg-gradient-to-r from-blue-300 via-indigo-400 to-purple-300 bg-clip-text text-transparent">
-                Real Voice.
-              </span>
-            </span>
-            <span className="block text-white">Own Any Room.</span>
-          </h1>
-          
-          <p className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-2xl">
-            Stop sounding scripted. Start speaking real. Srash Talk is voice-first training for BPO aspirants, 
-            freshers, and professionals who want to be heard, understood, and hired. Speak Real. Authentic. Strong. Honest.
-          </p>
-        </div>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl font-semibold text-lg flex items-center justify-center space-x-3 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300">
-            <span>Train with Aashiq</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
-          
-          <button className="px-8 py-4 border border-gray-600 rounded-xl font-semibold text-lg hover:bg-gray-800/30 transition-colors flex items-center justify-center space-x-3">
-            <Video className="w-5 h-5" />
-            <span>Watch Voice Demo</span>
-          </button>
-        </div>
-
-        {/* Trust Indicators */}
-        <div className="grid grid-cols-3 gap-4 pt-8">
-          {[
-            { number: "15K+", label: "Voices Transformed", color: "from-blue-400 to-cyan-400" },
-            { number: "94%", label: "Interview Success", color: "from-indigo-400 to-purple-400" },
-            { number: "500+", label: "Freshers Hired", color: "from-purple-400 to-pink-400" }
-          ].map((stat, index) => (
-            <div key={index} className="p-4 rounded-xl bg-gray-800/30 border border-gray-700/50">
-              <div className="text-center">
-                <div className={`text-2xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-1`}>
-                  {stat.number}
-                </div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
-              </div>
-            </div>
-          ))}
+     <div className="space-y-8">
+  {/* Value Proposition Cards */}
+  <div className="grid grid-cols-2 gap-3 mb-8">
+    {/* Card 1: YouTube Value */}
+    <div className="relative rounded-xl overflow-hidden group h-32 bg-gradient-to-br from-red-900/30 to-red-800/20 border border-red-700/30 hover:border-red-500/50 transition-all duration-300 hover:scale-105">
+      <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+        <Youtube className="w-8 h-8 text-red-400 mb-2 group-hover:scale-110 transition-transform" />
+        <div className="text-center">
+          <div className="text-sm font-semibold text-white">YouTube Channel</div>
+          <div className="text-xs text-gray-300 mt-1">Communication Mastery Series</div>
         </div>
       </div>
+    </div>
+    
+    {/* Card 2: Instagram Value */}
+    <div className="relative rounded-xl overflow-hidden group h-32 bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-700/30 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
+      <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+        <Instagram className="w-8 h-8 text-purple-400 mb-2 group-hover:scale-110 transition-transform" />
+        <div className="text-center">
+          <div className="text-sm font-semibold text-white">Instagram Presence</div>
+          <div className="text-xs text-gray-300 mt-1">Daily Voice Tips & Insights</div>
+        </div>
+      </div>
+    </div>
+    
+    {/* Card 3: Content Value */}
+    <div className="relative rounded-xl overflow-hidden group h-32 bg-gradient-to-br from-blue-900/30 to-cyan-900/20 border border-blue-700/30 hover:border-blue-500/50 transition-all duration-300 hover:scale-105">
+      <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+        <Sparkles className="w-8 h-8 text-blue-400 mb-2 group-hover:scale-110 transition-transform" />
+        <div className="text-center">
+          <div className="text-sm font-semibold text-white">Premium Content</div>
+          <div className="text-xs text-gray-300 mt-1">Expert Communication Strategies</div>
+        </div>
+      </div>
+    </div>
+    
+    {/* Card 4: Community Value */}
+    <div className="relative rounded-xl overflow-hidden group h-32 bg-gradient-to-br from-green-900/30 to-emerald-900/20 border border-green-700/30 hover:border-green-500/50 transition-all duration-300 hover:scale-105">
+      <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+        <Users className="w-8 h-8 text-green-400 mb-2 group-hover:scale-110 transition-transform" />
+        <div className="text-center">
+          <div className="text-sm font-semibold text-white">Growing Community</div>
+          <div className="text-xs text-gray-300 mt-1">Voice & Communication Enthusiasts</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      {/* Right Side - Image Container */}
+  {/* Main Heading - More Aspirational */}
+  <div className="space-y-6">
+    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
+      <span className="block text-white">Find Your</span>
+      <span className="block">
+        <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+          Authentic Voice
+        </span>
+      </span>
+      <span className="block text-white">Through Content That Matters</span>
+    </h1>
+    
+    <p className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-2xl">
+      Srash Talk brings you cutting-edge voice and communication insights through engaging content. 
+    </p>
+  </div>
+
+
+  {/* CTA Buttons - Focus on Value */}
+  <div className="flex flex-col sm:flex-row gap-4 pt-4">
+    <Link 
+      href="/showcase"
+      className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl font-semibold text-lg flex items-center justify-center space-x-3 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-105"
+    >
+      <Video className="w-5 h-5" />
+      <span>Explore Content Collection</span>
+      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+    </Link>
+    
+    <button 
+      onClick={() => document.getElementById('social')?.scrollIntoView({ behavior: 'smooth' })}
+      className="px-8 py-4 border border-gray-600 rounded-xl font-semibold text-lg hover:bg-gray-800/30 transition-colors flex items-center justify-center space-x-3 hover:scale-105"
+    >
+      <Globe className="w-5 h-5" />
+      <span>Follow Social Channels</span>
+    </button>
+  </div>
+
+
+
+  {/* Platform Links - Focus on Value */}
+  <div className="pt-8">
+    <div className="flex flex-wrap gap-3 justify-center">
+      <a 
+        href="https://youtube.com/@SrashTalkOfficial"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group px-6 py-3 bg-gradient-to-r from-red-600/20 to-red-700/20 hover:from-red-600/30 hover:to-red-700/30 border border-red-600/30 rounded-lg flex items-center space-x-2 transition-all duration-300 hover:scale-105"
+      >
+        <Youtube className="w-5 h-5 text-red-400 group-hover:scale-110 transition-transform" />
+        <div className="text-left">
+          <div className="text-sm font-medium">YouTube</div>
+          <div className="text-xs text-gray-400">In-depth tutorials & guides</div>
+        </div>
+      </a>
+      <a 
+        href="https://instagram.com/srashtalk"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 hover:from-purple-600/30 hover:to-pink-600/30 border border-purple-600/30 rounded-lg flex items-center space-x-2 transition-all duration-300 hover:scale-105"
+      >
+        <Instagram className="w-5 h-5 text-purple-400 group-hover:scale-110 transition-transform" />
+        <div className="text-left">
+          <div className="text-sm font-medium">Instagram</div>
+          <div className="text-xs text-gray-400">Quick tips & daily motivation</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+      {/* Right Side - Content Creator Showcase */}
       <div className="relative">
-        {/* Main Image Container */}
+        {/* Main Content Card */}
         <div className="relative rounded-2xl overflow-hidden group">
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/30 to-transparent z-10"></div>
           
           {/* Image */}
-          <div className="aspect-[3.7/5] relative">
+          <div className="aspect-[3.8/5] relative">
             <img 
-              src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=80"
-              alt="Professional voice training session"
+              src="/thumbnail.png"
+              alt="Srash Talk Content Creator"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700"
             />
             
             {/* Content Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 z-20 p-8">
+            <div className="absolute inset-0 z-20 p-8 flex flex-col justify-between">
+              {/* Top Badge */}
+              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-black/40 backdrop-blur-sm rounded-full self-start">
+                <Sparkles className="w-4 h-4" />
+                <span className="text-sm font-medium">Content Creator</span>
+              </div>
+              
+              {/* Bottom Content */}
               <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-                    <Mic className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-blue-400">Live Training</div>
-                    <div className="text-white font-bold">Voice Power Masterclass</div>
-                  </div>
+                <div>
+                  <div className="text-sm font-medium text-blue-400">CONTENT CREATOR PORTFOLIO</div>
+                  <div className="text-white font-bold text-xl">Social Media Influence</div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { label: "Participants", value: "24" },
-                    { label: "Voice Hacks", value: "8" },
-                    { label: "Duration", value: "2h" },
-                    { label: "Rating", value: "4.9★" }
+                    { label: "Instagram Reels", value: "450+", icon: Video },
+                    { label: "YouTube Videos", value: "200+", icon: PlayCircle },
+                    { label: "Monthly Reach", value: "500K+", icon: TrendingUp },
+                    { label: "Engagement Rate", value: "8.2%", icon: Heart }
                   ].map((item, index) => (
                     <div key={index} className="p-3 rounded-lg bg-black/40 backdrop-blur-sm border border-white/10">
-                      <div className="text-sm font-bold text-white">{item.value}</div>
-                      <div className="text-xs text-gray-300">{item.label}</div>
+                      <div className="flex items-center space-x-2">
+                        <item.icon className="w-3 h-3 text-blue-400" />
+                        <div className="text-sm font-bold text-white">{item.value}</div>
+                      </div>
+                      <div className="text-xs text-gray-300 mt-1">{item.label}</div>
                     </div>
                   ))}
                 </div>
@@ -685,199 +739,232 @@ export default function SrashTalkBusinessPortfolio() {
     </div>
   </div>
 
-  {/* Animated Background Elements - Simplified */}
+  {/* Animated Background Elements */}
   <div className="absolute top-1/4 -left-20 w-64 h-64 rounded-full bg-gradient-to-r from-blue-500/5 to-indigo-500/5 blur-3xl"></div>
   <div className="absolute bottom-1/4 -right-20 w-96 h-96 rounded-full bg-gradient-to-r from-purple-500/5 to-pink-500/5 blur-3xl"></div>
 </section>
 
 
+{/* Interactive Content Explorer Section */}
+<section id="videos" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <div className="text-center mb-16">
+    <h2 className="text-4xl sm:text-5xl font-bold mb-6">
+      Content <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Across Platforms</span>
+    </h2>
+    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+      Discover valuable communication insights tailored for different audiences
+    </p>
+  </div>
 
-
-
-      {/* Social Media Platforms Section */}
-      <section id="social" className="py-20 bg-gradient-to-b from-gray-900/50 to-gray-950/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6">
-              Follow Me on <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Social Media</span>
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Daily motivation, training tips, and success stories on these platforms
-            </p>
+  {/* Platform Comparison */}
+  <div className="grid lg:grid-cols-2 gap-8 mb-16">
+    {/* Instagram Card */}
+    <div className="relative group">
+      <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 rounded-2xl p-8 border border-purple-700/30 hover:border-purple-500/50 transition-all duration-300 h-full">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <div className="w-16 h-16 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+              <Instagram className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold">Instagram Reels</h3>
+              <p className="text-gray-400">@srashtalk</p>
+            </div>
           </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {socialPlatforms.map((platform, index) => (
-              <a
-                key={index}
-                href={platform.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative rounded-2xl overflow-hidden border border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:scale-105"
-              >
-                <div className="p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center space-x-4">
-                      <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${platform.color} flex items-center justify-center`}>
-                        <platform.icon className="w-8 h-8 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-bold">{platform.name}</h3>
-                        <p className="text-gray-400">{platform.handle}</p>
-                      </div>
-                    </div>
-                    <ExternalLink className="w-6 h-6 text-gray-400 group-hover:text-blue-400 transition-colors" />
-                  </div>
-                  
-                  <p className="text-gray-300 mb-6">{platform.description}</p>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg bg-gray-800/30">
-                      <div className="text-2xl font-bold mb-1">{platform.stats.split('+')[0]}+</div>
-                      <div className="text-sm text-gray-400">Followers</div>
-                    </div>
-                    <div className="p-4 rounded-lg bg-gray-800/30">
-                      <div className="text-2xl font-bold mb-1">{platform.posts.split('+')[0]}+</div>
-                      <div className="text-sm text-gray-400">Videos</div>
-                    </div>
-                  </div>
-                  
-                  <button className="mt-6 w-full py-3 rounded-lg bg-gradient-to-r from-gray-800 to-gray-900 hover:opacity-90 transition-opacity">
-                    Follow on {platform.name}
-                  </button>
-                </div>
-              </a>
+          <ExternalLink className="w-6 h-6 text-purple-400" />
+        </div>
+        
+        <p className="text-gray-300 mb-6">
+          Quick, engaging voice tips and motivation in under 90 seconds. Perfect for busy professionals.
+        </p>
+        
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg bg-purple-900/50 flex items-center justify-center">
+              <Clock className="w-5 h-5 text-purple-400" />
+            </div>
+            <div>
+              <div className="font-medium">Duration</div>
+              <div className="text-sm text-gray-400">30-90 seconds</div>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg bg-purple-900/50 flex items-center justify-center">
+              <Users className="w-5 h-5 text-purple-400" />
+            </div>
+            <div>
+              <div className="font-medium">Content Type</div>
+              <div className="text-sm text-gray-400">Voice hacks, Quick tips, Motivation</div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-8 pt-8 border-t border-purple-700/30">
+          <h4 className="font-bold mb-4">Top Reel Topics</h4>
+          <div className="flex flex-wrap gap-2">
+            {['Pronunciation Drills', 'Interview Tips', 'Confidence Boost', 'Accent Tips', 'Daily Motivation'].map((topic) => (
+              <span key={topic} className="px-3 py-1.5 bg-purple-900/30 rounded-lg text-sm">
+                {topic}
+              </span>
             ))}
           </div>
         </div>
-      </section>
+      </div>
+    </div>
 
-                  {/* Video Grid Section */}
-      <section id="videos" className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Platform Filter */}
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => setActivePlatform("all")}
-              className={`px-6 py-3 rounded-full border transition-all duration-300 ${
-                activePlatform === "all" 
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 border-blue-500 text-white' 
-                  : 'border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400'
-              }`}
-            >
-              All Platforms
-            </button>
-            <button
-              onClick={() => setActivePlatform("instagram")}
-              className={`px-6 py-3 rounded-full border transition-all duration-300 flex items-center space-x-2 ${
-                activePlatform === "instagram" 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-500 text-white' 
-                  : 'border-gray-700 text-gray-400 hover:border-purple-500 hover:text-purple-400'
-              }`}
-            >
-              <Instagram className="w-4 h-4" />
-              <span>Instagram Reels</span>
-            </button>
-            <button
-              onClick={() => setActivePlatform("youtube")}
-              className={`px-6 py-3 rounded-full border transition-all duration-300 flex items-center space-x-2 ${
-                activePlatform === "youtube" 
-                  ? 'bg-gradient-to-r from-red-600 to-red-500 border-red-500 text-white' 
-                  : 'border-gray-700 text-gray-400 hover:border-red-500 hover:text-red-400'
-              }`}
-            >
-              <Youtube className="w-4 h-4" />
-              <span>YouTube Videos</span>
-            </button>
+    {/* YouTube Card */}
+    <div className="relative group">
+      <div className="bg-gradient-to-br from-red-900/20 to-red-800/20 rounded-2xl p-8 border border-red-700/30 hover:border-red-500/50 transition-all duration-300 h-full">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <div className="w-16 h-16 rounded-xl bg-gradient-to-r from-red-600 to-red-500 flex items-center justify-center shadow-lg">
+              <Youtube className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold">YouTube Videos</h3>
+              <p className="text-gray-400">@SrashTalkOfficial</p>
+            </div>
+          </div>
+          <ExternalLink className="w-6 h-6 text-red-400" />
+        </div>
+        
+        <p className="text-gray-300 mb-6">
+          In-depth training sessions, case studies, and complete courses for comprehensive learning.
+        </p>
+        
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg bg-red-900/50 flex items-center justify-center">
+              <Clock className="w-5 h-5 text-red-400" />
+            </div>
+            <div>
+              <div className="font-medium">Duration</div>
+              <div className="text-sm text-gray-400">10-60 minutes</div>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg bg-red-900/50 flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-red-400" />
+            </div>
+            <div>
+              <div className="font-medium">Content Type</div>
+              <div className="text-sm text-gray-400">Full training, Case studies, Workshops</div>
+            </div>
           </div>
         </div>
-
-        {/* Video Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredVideos.map((video, index) => (
-            <button
-              key={video.id}
-              onClick={() => handleVideoClick(portfolioVideos.findIndex(v => v.id === video.id))}
-              className={`group relative rounded-xl overflow-hidden border transition-all duration-300 ${
-                activeVideo === portfolioVideos.findIndex(v => v.id === video.id)
-                  ? 'border-blue-500 shadow-xl shadow-blue-500/20 scale-105'
-                  : 'border-gray-700 hover:border-blue-500/50'
-              }`}
-            >
-              {/* Thumbnail */}
-              <div className="aspect-video relative">
-                <img 
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                
-                {/* Platform Badge */}
-                <div className={`absolute top-4 left-4 px-2 py-1 rounded-md text-xs font-medium ${
-                  video.platform === 'instagram' 
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600' 
-                    : 'bg-gradient-to-r from-red-600 to-red-500'
-                }`}>
-                  {video.platform === 'instagram' ? 'Instagram' : 'YouTube'}
-                </div>
-
-                {/* Duration */}
-                <div className="absolute top-4 right-4 px-2 py-1 rounded-md bg-black/60 backdrop-blur-sm text-xs">
-                  {video.duration}
-                </div>
-
-                {/* Stats */}
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="flex items-center space-x-1">
-                        <LikeIcon className="w-3 h-3" />
-                        <span className="text-xs">{video.likes}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <MessageSquare className="w-3 h-3" />
-                        <span className="text-xs">{video.comments}</span>
-                      </div>
-                    </div>
-                    <Eye className="w-3 h-3" />
-                  </div>
-                </div>
-
-                {/* Play Button */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
-                    <Play className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Video Info */}
-              <div className="p-4 bg-gradient-to-b from-gray-800/80 to-gray-900/80">
-                <h3 className="font-bold mb-2 text-left">{video.title}</h3>
-                <p className="text-sm text-gray-300 mb-3 text-left line-clamp-2">{video.description}</p>
-                <div className="flex items-center justify-between text-sm text-gray-400">
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="w-3 h-3" />
-                    <span>{video.date}</span>
-                  </div>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      openInPlatform(video)
-                    }}
-                    className="text-blue-400 hover:text-blue-300 transition-colors flex items-center space-x-1"
-                  >
-                    <span>Watch Now</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-            </button>
-          ))}
+        
+        <div className="mt-8 pt-8 border-t border-red-700/30">
+          <h4 className="font-bold mb-4">Popular Series</h4>
+          <div className="flex flex-wrap gap-2">
+            {['BPO Training', 'Interview Mastery', 'Leadership Voice', 'Accent Neutralization', 'Corporate Frameworks'].map((series) => (
+              <span key={series} className="px-3 py-1.5 bg-red-900/30 rounded-lg text-sm">
+                {series}
+              </span>
+            ))}
+          </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
 
+  {/* Content Strategy Showcase */}
+  <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-2xl p-8 border border-gray-700">
+    <div className="text-center mb-8">
+      <h3 className="text-2xl font-bold mb-2">Strategic Content Distribution</h3>
+      <p className="text-gray-400">How content is tailored for maximum impact across platforms</p>
+    </div>
+    
+    <div className="grid md:grid-cols-3 gap-6">
+      <div className="p-6 rounded-xl bg-gray-800/50">
+        <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/10 to-indigo-500/10 flex items-center justify-center mb-4">
+          <Target className="w-6 h-6 text-blue-400" />
+        </div>
+        <h4 className="font-bold mb-2">Instagram Strategy</h4>
+        <p className="text-gray-400 text-sm">
+          Quick, viral-worthy tips that drive engagement and brand awareness
+        </p>
+      </div>
+      
+      <div className="p-6 rounded-xl bg-gray-800/50">
+        <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/10 to-pink-500/10 flex items-center justify-center mb-4">
+          <TrendingUp className="w-6 h-6 text-purple-400" />
+        </div>
+        <h4 className="font-bold mb-2">YouTube Strategy</h4>
+        <p className="text-gray-400 text-sm">
+          Deep-dive content that establishes authority and drives conversions
+        </p>
+      </div>
+      
+      <div className="p-6 rounded-xl bg-gray-800/50">
+        <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500/10 to-emerald-500/10 flex items-center justify-center mb-4">
+          <Users className="w-6 h-6 text-green-400" />
+        </div>
+        <h4 className="font-bold mb-2">Audience Growth</h4>
+        <p className="text-gray-400 text-sm">
+          Instagram hooks them, YouTube trains them, website converts them
+        </p>
+      </div>
+    </div>
+
+    {/* Content Gallery Preview */}
+<div className="mt-12">
+  <h4 className="text-xl font-bold mb-6 text-center">Content Formats</h4>
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {[
+      { 
+        title: 'Quick Tips', 
+        icon: '⚡',
+        desc: 'Bite-sized voice hacks'
+      },
+      { 
+        title: 'Drill Sessions', 
+        icon: '🎯',
+        desc: 'Practice exercises'
+      },
+      { 
+        title: 'Expert Insights', 
+        icon: '💡',
+        desc: 'Professional guidance'
+      },
+      { 
+        title: 'Live Q&A', 
+        icon: '🎤',
+        desc: 'Interactive discussions'
+      }
+    ].map((item, index) => (
+      <div key={index} className="group">
+        <div className="aspect-square rounded-xl border border-gray-700 bg-gray-800/20 p-6 flex flex-col items-center justify-center hover:border-blue-500/50 hover:bg-gray-800/40 transition-all duration-300">
+          <div className="text-3xl mb-3 opacity-80">{item.icon}</div>
+          <div className="text-center">
+            <div className="font-semibold text-white mb-1">{item.title}</div>
+            <div className="text-xs text-gray-400 mt-1">{item.desc}</div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+  </div>
+
+  {/* CTA to Showcase */}
+  <div className="text-center mt-16">
+    <Link
+      href="/showcase"
+      className="group inline-flex items-center space-x-4 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl font-semibold text-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 mx-auto"
+    >
+      <div className="flex items-center space-x-3">
+        <Video className="w-6 h-6" />
+        <span>Explore Complete Video Library</span>
+      </div>
+      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+    </Link>
+    <p className="text-gray-400 mt-4">
+      Full filtering, search, and preview capabilities in our showcase page
+    </p>
+  </div>
+</section>
             <section id="portfolio" className="py-20 bg-gradient-to-b from-gray-900/50 to-gray-950/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -1080,6 +1167,86 @@ export default function SrashTalkBusinessPortfolio() {
         </div>
       </section>
 
+
+
+      {/* Client Portfolio */}
+      <section id="portfolio" className="py-20 bg-gradient-to-b from-gray-900/50 to-gray-950/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <Building className="w-5 h-5 text-blue-400" />
+              <span className="text-sm font-semibold text-blue-400 uppercase tracking-wider">CLIENT PORTFOLIO</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-6">
+              Trusted by <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Industry Leaders</span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Transformative partnerships with top companies across sectors
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {clientPortfolio.map((client, index) => (
+              <div key={index} className="group bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-2xl p-8 border border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10">
+                {/* Client Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl">
+                      {client.logo}
+                    </div>
+                    <div>
+                      <div className="font-bold text-lg">{client.name}</div>
+                      <div className="text-sm text-gray-400">{client.industry}</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-gray-400">Partnership</div>
+                    <div className="text-sm font-bold">{client.duration}</div>
+                  </div>
+                </div>
+
+                {/* Testimonial */}
+                <div className="mb-6 p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+                  <Quote className="w-5 h-5 text-blue-400/50 mb-2" />
+                  <p className="text-sm italic text-gray-300">"{client.testimonial}"</p>
+                </div>
+
+                {/* Services */}
+                <div className="mb-6">
+                  <div className="text-sm font-semibold text-gray-400 mb-3">Services Provided</div>
+                  <div className="flex flex-wrap gap-2">
+                    {client.services.map((service, i) => (
+                      <span key={i} className="px-3 py-1.5 bg-gray-800 rounded-lg text-xs border border-gray-700">
+                        {service}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Results */}
+                <div>
+                  <div className="text-sm font-semibold text-gray-400 mb-3">Measurable Results</div>
+                  <div className="space-y-2">
+                    {client.results.map((result, i) => (
+                      <div key={i} className="flex items-center space-x-2 text-sm">
+                        <CheckCircle className="w-4 h-4 text-green-400" />
+                        <span className="text-gray-300">{result}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* View Case Study Button */}
+                <button className="w-full mt-8 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors text-sm font-medium flex items-center justify-center space-x-2 group">
+                  <FileText className="w-4 h-4" />
+                  <span>View Case Study</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
 
       {/* Contact Section */}
