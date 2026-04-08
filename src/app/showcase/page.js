@@ -17,10 +17,95 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import Link from 'next/link';
-import { InstagramEmbed } from '../components/instagram';
 
-// Updated video data with unique content
+// Simple Instagram Embed Component (No backend)
+function InstagramEmbed({ url, onClose }) {
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const scriptId = 'instagram-embed-script';
+    
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://www.instagram.com/embed.js';
+      script.async = true;
+      script.onload = () => {
+        setLoading(false);
+        if (window.instgrm) {
+          window.instgrm.Embeds.process();
+        }
+      };
+      document.body.appendChild(script);
+    } else {
+      setLoading(false);
+      if (window.instgrm) {
+        window.instgrm.Embeds.process();
+      }
+    }
+  }, [url]);
+
+  return (
+    <div className="relative w-full max-w-md mx-auto">
+      {loading && (
+        <div className="flex items-center justify-center p-8">
+          <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+      
+      <blockquote
+        className="instagram-media"
+        data-instgrm-permalink={url}
+        data-instgrm-version="14"
+        style={{ 
+          maxWidth: '540px', 
+          minWidth: '326px', 
+          margin: '0 auto',
+          background: 'transparent',
+          borderRadius: '12px'
+        }}
+      >
+      </blockquote>
+    </div>
+  );
+}
+
+// Video Data with 3 local videos at the beginning
 const videoData = [
+  // THREE LOCAL VIDEOS (First positions)
+  {
+    id: 'local_1',
+    title: 'Professional English Essentials',
+    platform: 'local',
+    url: '#',
+    thumbnail: '/v11.png',
+    duration: '15:30',
+    date: 'Feb 1, 2026',
+    tags: ['speech', 'masterclass', 'complete guide'],
+    localVideoSrc: '/v1.mp4'
+  },
+  {
+    id: 'local_2',
+    title: 'Corporate Communication & Confidence Matery',
+    platform: 'local',
+    url: '#',
+    thumbnail: '/v22.png',
+    duration: '12:45',
+    date: 'Jan 28, 2026',
+    tags: ['pronunciation', 'professional', 'tips'],
+    localVideoSrc: '/v2.mp4'
+  },
+  {
+    id: 'local_3',
+    title: 'Corporate English,Leadership Communication & Interview Mastery',
+    platform: 'local',
+    url: '#',
+    thumbnail: '/v33.png',
+    duration: '18:20',
+    date: 'Jan 25, 2026',
+    tags: ['public speaking', 'confidence', 'training'],
+    localVideoSrc: '/v3.mp4'
+  },
   {
     id: 'insta_1',
     title: 'CH or J — Pronunciation Guide',
@@ -33,7 +118,7 @@ const videoData = [
   },
   {
     id: 'insta_2',
-    title: 'Disagreeing with your boss? Here’s how to do it without losing your job',
+    title: 'Disagreeing with your boss? Here\'s how to do it without losing your job',
     platform: 'instagram',
     url: 'https://www.instagram.com/reel/DNk412sSQD_/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
     thumbnail: '/ins12.png',
@@ -53,7 +138,7 @@ const videoData = [
   },
   {
     id: 'insta_4',
-    title: 'We don’t fight because we’re angry',
+    title: 'We don\'t fight because we\'re angry',
     platform: 'instagram',
     url: 'https://www.instagram.com/reel/DScoY6ekmbc/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
     thumbnail: '/ins8.png',
@@ -93,7 +178,7 @@ const videoData = [
   },
   {
     id: 'insta_8',
-    title: 'Some friendships fade when effort isn’t mutual',
+    title: 'Some friendships fade when effort isn\'t mutual',
     platform: 'instagram',
     url: 'https://www.instagram.com/reel/DSnH_Tpki6N/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
     thumbnail: '/ins7.png',
@@ -103,7 +188,7 @@ const videoData = [
   },
   {
     id: 'insta_9',
-    title: 'Some people don’t leave loudly',
+    title: 'Some people don\'t leave loudly',
     platform: 'instagram',
     url: 'https://www.instagram.com/reel/DSXmEZdEgI1/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
     thumbnail: '/ins5.png',
@@ -123,7 +208,7 @@ const videoData = [
   },
 ];
 
-// YouTube videos - Fixed URLs and better titles
+// YouTube videos
 const youtubeVideos = [
   {
     id: 'yt_1',
@@ -140,7 +225,7 @@ const youtubeVideos = [
     title: 'Speak Clear English in 7 Minutes',
     platform: 'youtube',
     url: 'https://www.youtube.com/watch?v=-r3gIEazSNs',
-    thumbnail: 'yt2.png',
+    thumbnail: '/yt2.png',
     duration: '6:47',
     date: 'Jan 5, 2026',
     tags: ['english', 'clarity', 'speaking']
@@ -227,14 +312,13 @@ const youtubeVideos = [
   }
 ];
 
-// Combine all videos
+// Combine all videos (local videos will appear first)
 const portfolioVideos = [...videoData, ...youtubeVideos];
 
-// Extract YouTube video ID - Fixed function
+// Extract YouTube video ID
 const getYoutubeId = (url) => {
   if (!url) return null;
   
-  // Handle different YouTube URL formats
   const patterns = [
     /youtube\.com\/watch\?v=([^&]+)/,
     /youtu\.be\/([^?]+)/,
@@ -249,7 +333,6 @@ const getYoutubeId = (url) => {
     }
   }
   
-  // If no match found, return the last part of the URL
   const parts = url.split('/');
   return parts[parts.length - 1].split('?')[0];
 };
@@ -335,9 +418,11 @@ export default function ShowcasePage() {
           <div className={`absolute top-3 left-3 px-3 py-1.5 rounded-full text-xs font-medium ${
             video.platform === 'instagram' 
               ? 'bg-gradient-to-r from-purple-600 to-pink-600' 
-              : 'bg-gradient-to-r from-red-600 to-red-500'
+              : video.platform === 'youtube'
+              ? 'bg-gradient-to-r from-red-600 to-red-500'
+              : 'bg-gradient-to-r from-green-600 to-teal-600'
           }`}>
-            {video.platform === 'instagram' ? 'Instagram' : 'YouTube'}
+            {video.platform === 'instagram' ? 'Instagram' : video.platform === 'youtube' ? 'YouTube' : 'Exclusive'}
           </div>
 
           <div className="absolute top-3 right-3 px-2 py-1 rounded-md bg-black/60 backdrop-blur-sm text-xs">
@@ -386,16 +471,18 @@ export default function ShowcasePage() {
                 <Play className="w-3 h-3" />
               </button>
               
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(video.url, '_blank', 'noopener,noreferrer');
-                }}
-                className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-xs flex items-center space-x-1"
-              >
-                <span>Open</span>
-                <ExternalLink className="w-3 h-3" />
-              </button>
+              {video.platform !== 'local' && (
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(video.url, '_blank', 'noopener,noreferrer');
+                  }}
+                  className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-xs flex items-center space-x-1"
+                >
+                  <span>Open</span>
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -448,7 +535,13 @@ export default function ShowcasePage() {
             Explore {portfolioVideos.length} speech and communication videos
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
+              <div className="text-3xl font-bold text-green-400 mb-2">
+                {portfolioVideos.filter(v => v.platform === 'local').length}
+              </div>
+              <div className="text-gray-400">Exclusive Videos</div>
+            </div>
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
               <div className="text-3xl font-bold text-blue-400 mb-2">{portfolioVideos.length}</div>
               <div className="text-gray-400">Total Videos</div>
@@ -495,6 +588,17 @@ export default function ShowcasePage() {
                 }`}
               >
                 All Platforms ({portfolioVideos.length})
+              </button>
+              <button
+                onClick={() => setActivePlatform("local")}
+                className={`px-6 py-3 rounded-full border transition-all flex items-center space-x-2 ${
+                  activePlatform === "local" 
+                    ? 'bg-gradient-to-r from-green-600 to-teal-600 border-green-500 text-white shadow-lg shadow-green-500/25' 
+                    : 'border-gray-700 text-gray-400 hover:border-green-500 hover:text-green-400'
+                }`}
+              >
+                <Play className="w-5 h-5" />
+                <span>Exclusive ({portfolioVideos.filter(v => v.platform === 'local').length})</span>
               </button>
               <button
                 onClick={() => setActivePlatform("instagram")}
@@ -622,35 +726,17 @@ export default function ShowcasePage() {
         )}
       </section>
 
-      {/* Clean Popup Modal */}
+      {/* Video Modal */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden">
-            {/* Header */}
-            <div className="px-4 py-3 border-b flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className={`p-1.5 rounded-md ${
-                  selectedVideo.platform === 'instagram' 
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500' 
-                    : 'bg-gradient-to-r from-red-500 to-red-600'
-                }`}>
-                  {selectedVideo.platform === 'instagram' ? (
-                    <Instagram className="w-4 h-4 text-white" />
-                  ) : (
-                    <Youtube className="w-4 h-4 text-white" />
-                  )}
-                </div>
-                <h3 className="font-semibold text-sm text-gray-900 truncate max-w-[300px]">
-                  {selectedVideo.title}
-                </h3>
-              </div>
-              <button
-                onClick={closeVideoModal}
-                className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
-              >
-                <X className="w-4 h-4 text-gray-600" />
-              </button>
-            </div>
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4" onClick={closeVideoModal}>
+          <div className="relative w-full max-w-4xl bg-gray-900 rounded-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            {/* Close Button */}
+            <button 
+              onClick={closeVideoModal}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
             {/* Video Content */}
             <div className="p-4">
@@ -664,38 +750,57 @@ export default function ShowcasePage() {
                     allowFullScreen
                   />
                 </div>
+              ) : selectedVideo.platform === 'local' ? (
+                <div className="aspect-video rounded-lg overflow-hidden bg-black">
+                  <video
+                    src={selectedVideo.localVideoSrc}
+                    controls
+                    autoPlay
+                    className="w-full h-full"
+                    poster={selectedVideo.thumbnail}
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               ) : (
-                <div className="w-full">
+                <div className="flex justify-center">
                   <InstagramEmbed url={selectedVideo.url} onClose={closeVideoModal} />
                 </div>
               )}
             </div>
 
             {/* Video Info */}
-            <div className="px-4 pb-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Calendar className="w-4 h-4" />
-                  <span>{selectedVideo.date}</span>
-                  <span className="mx-2">•</span>
-                  <Clock className="w-4 h-4" />
-                  <span>{selectedVideo.duration}</span>
+            <div className="p-6 pt-0">
+              <h3 className="text-xl font-bold mb-3">{selectedVideo.title}</h3>
+              
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-4 text-sm text-gray-400">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    <span>{selectedVideo.date}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    <span>{selectedVideo.duration}</span>
+                  </div>
                 </div>
-                <span className={`px-2 py-1 rounded text-xs font-medium ${
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                   selectedVideo.platform === 'instagram' 
-                    ? 'bg-purple-100 text-purple-800' 
-                    : 'bg-red-100 text-red-800'
+                    ? 'bg-purple-600 text-white' 
+                    : selectedVideo.platform === 'youtube'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-green-600 text-white'
                 }`}>
-                  {selectedVideo.platform === 'instagram' ? 'Instagram' : 'YouTube'}
+                  {selectedVideo.platform === 'instagram' ? 'Instagram Reel' : selectedVideo.platform === 'youtube' ? 'YouTube Video' : 'Exclusive Content'}
                 </span>
               </div>
 
               {/* Tags */}
-              <div className="flex flex-wrap gap-1 mb-4">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {selectedVideo.tags.map((tag, index) => (
                   <span 
                     key={index} 
-                    className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                    className="px-2 py-1 bg-gray-800 text-gray-300 rounded-md text-xs"
                   >
                     #{tag}
                   </span>
@@ -703,21 +808,15 @@ export default function ShowcasePage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={closeVideoModal}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors text-sm"
-                >
-                  Close
-                </button>
+              {selectedVideo.platform !== 'local' && (
                 <button
                   onClick={() => window.open(selectedVideo.url, '_blank', 'noopener,noreferrer')}
-                  className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors text-sm flex items-center gap-1.5"
+                  className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
                 >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  Open Original
+                  <ExternalLink className="w-4 h-4" />
+                  Open Original on {selectedVideo.platform === 'instagram' ? 'Instagram' : 'YouTube'}
                 </button>
-              </div>
+              )}
             </div>
           </div>
         </div>

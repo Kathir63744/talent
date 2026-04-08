@@ -62,6 +62,7 @@ import {
 } from "lucide-react"
 // Add this import
 import Link from 'next/link';
+import RealTimeInstagram from "./components/RealTimeInstagram";
 
 export default function SrashTalkBusinessPortfolio() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -253,7 +254,89 @@ export default function SrashTalkBusinessPortfolio() {
         instagramComments: "98",
         youtubeViews: "18.3K",
         youtubeLikes: "2.7K"
+    }},
+        {
+      id: 7,
+      title: "Accent Neutralization Workshop",
+      description: "Techniques for clear and neutral pronunciation",
+      duration: "22:10",
+      category: "Training Demos",
+      thumbnail: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80",
+      views: "47.9K",
+      likes: "5.8K",
+      comments: "342",
+      date: "Oct 18, 2023",
+      platform: "instagram",
+      youtubeUrl: "https://youtube.com/watch?v=example7",
+      instagramUrl: "https://instagram.com/reel/example7",
+      socialStats: {
+        instagramLikes: "5.8K",
+        instagramComments: "342",
+        youtubeViews: "47.9K",
+        youtubeLikes: "4.3K"
       }
+    },
+    {
+      id: 9,
+      title: "Professional English Expressions",
+      description: "Voice techniques for executives and team leaders",
+      duration: "28:45",
+      category: "Executive Training",
+      thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80",
+      views: "18.3K",
+      likes: "2.7K",
+      comments: "165",
+      date: "Sep 22, 2023",
+      platform: "youtube",
+      youtubeUrl: "https://youtube.com/watch?v=example8",
+      instagramUrl: "https://instagram.com/p/example8",
+      socialStats: {
+        instagramLikes: "1.3K",
+        instagramComments: "98",
+        youtubeViews: "18.3K",
+        youtubeLikes: "2.7K"
+      }},
+        {
+      id: 7,
+      title: "Accent Neutralization Workshop",
+      description: "Techniques for clear and neutral pronunciation",
+      duration: "22:10",
+      category: "Training Demos",
+      thumbnail: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80",
+      views: "47.9K",
+      likes: "5.8K",
+      comments: "342",
+      date: "Oct 18, 2023",
+      platform: "instagram",
+      youtubeUrl: "https://youtube.com/watch?v=example7",
+      instagramUrl: "https://instagram.com/reel/example7",
+      socialStats: {
+        instagramLikes: "5.8K",
+        instagramComments: "342",
+        youtubeViews: "47.9K",
+        youtubeLikes: "4.3K"
+      }
+    },
+    {
+      id: 9,
+      title: "Corporate Communication",
+      description: "Voice techniques for executives and team leaders",
+      duration: "28:45",
+      category: "Executive Training",
+      thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80",
+      views: "18.3K",
+      likes: "2.7K",
+      comments: "165",
+      date: "Sep 22, 2023",
+      platform: "youtube",
+      youtubeUrl: "https://youtube.com/watch?v=example8",
+      instagramUrl: "https://instagram.com/p/example8",
+      socialStats: {
+        instagramLikes: "1.3K",
+        instagramComments: "98",
+        youtubeViews: "18.3K",
+        youtubeLikes: "2.7K"
+      },
     },
   ]
 
@@ -653,6 +736,8 @@ const navLinks = [
 
 
 
+
+
   {/* Platform Links - Focus on Value */}
   <div className="pt-8">
     <div className="flex flex-wrap gap-3 justify-center">
@@ -783,7 +868,7 @@ const navLinks = [
 </section>
 
 
-{/* Interactive Content Explorer Section */}
+
 <section id="videos" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
   <div className="text-center mb-16">
     <h2 className="text-4xl sm:text-5xl font-bold mb-6">
